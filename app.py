@@ -1,6 +1,10 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 from redis import Redis
+import os
+
+
+myhost = os.uname()[1]
 
 app = Flask(__name__)
 api = Api(app)
@@ -11,12 +15,13 @@ redis = Redis(host='redis', port=6379)
 class Message(Resource):
     def get(self, id):
         # abort_if_todo_doesnt_exist(id)
-        return redis.get(id)
+        return "from host: {}, value is {}".format(myhost, redis.get(id))
 
     def post(self, id):
         print(request.data)
         redis.set(id, request.data)
-        return redis.get(id)
+        # return redis.get(id)
+        return "from host: {}, value is {}".format(myhost, redis.get(id))
 
 
 ##
